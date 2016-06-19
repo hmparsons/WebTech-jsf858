@@ -12,4 +12,4 @@ function connect_db(){
 
 	return $conn;
 }
-
+?>
