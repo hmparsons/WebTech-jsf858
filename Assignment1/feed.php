@@ -4,50 +4,47 @@
 	<title>MyFacebook Feed</title>
 </head>
 <body>
-<?php
-	include('database.php');
 
-	session_start();
+   <?php
+	  include('database.php');
 
-	$conn = connect_db();
+	   session_start();
+	   $conn = connect_db();
+	   $username = $_SESSION["username"];
+	   $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
 
-	$username = $_SESSION["username"];
-	$result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
+      // User Information
+	   $row = mysqli_fetch_assoc($result);
+	   echo "<h1>Welcome back ".$row[name]."!</h1>";
+	   echo "<img src='".$row['profile_pic']."'>";
 
-	//user information
-	$row = mysqli_fetch_assoc($result);
+      echo "<form action='posts.php' method='POST'>";
+      echo "<p><textarea name='content'>What's on your mind?</textarea></p>";
+      // $row needs to php inside of html
+      echo "<input type='hidden' name='UID' value='$row[id]'>";
+      echo "<p><input type='submit'></p>";
+      echo "</form>";
 
-	echo "<h1>Welcome back ".$row['name']."!</h1>";
-	echo "<img src='".$row['profile_pic']."'>";
-	echo "<hr>";
+      echo "<br>";
 
-	echo "<form method='POST' action='posts.php'>";
-	echo "<p><textarea name='content'>Say something...</textarea></p>";
-	echo "<input type='hidden' name='UID' value='$row[id]'>";
-	echo "<p><input type='submit'></p>";
-	echo "</form>";
+      $result_posts = mysqli_query($conn, "SELECT * FROM posts");
+      $num_of_rows = mysqli_num_rows($result_posts);
 
-	echo "<br>";
+      echo "<h2>My Feed</h2>";
+      if($num_of_rows){
+         for($i =0; $i < $num_of_rows; $i++){
+            $row = mysqli_fetch_row($result_posts);
+            echo "$row[2] said $row[4] ($row[5])";
+            echo "<form action='likes.php' method='POST'>";
+            echo "<input type='hidden' name='PID' value'$row[0]'>";
+            echo " <input type='submit' value='Like'></form>";
+            echo "<br>";
+         }
+      }else{
+         echo "Nothing to see here!";
+      }
 
-	$result_posts = mysqli_query($conn, "SELECT * FROM posts");
-	$num_of_rows = mysqli_num_rows($result_posts);
-
-	echo "<h2>My Feed</h2>";
-	if ($num_of_rows == 0) {
-		echo "<p>No new posts to show!</p>";
-	}
-
-	//show all posts on myfacebook
-	for($i = 0; $i < $num_of_rows; $i++){
-
-		$row = mysqli_fetch_row($result_posts);
-		echo "$row[3] said $row[1] ($row[5])";
-		echo "<form action='likes.php' method='POST'> <input type='hidden' name='PID' value='$row[0]'> <input type='submit' value='Like'></form>";
-		echo "<br>";
-	}
-
-?>
-
+   ?>
 
 </body>
 </html>
