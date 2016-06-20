@@ -3,10 +3,10 @@
    session_start();
 
    include('database.php');
+   include('functions.php');
 
-   $content = $_POST['content'];
-   $UID = $_POST['UID'];
-
+   $content = sanitizeString($_POST['content']);
+   $UID = sanitizeString($_POST['UID']);
 
    // Connect DB
    $conn = connect_db();
@@ -14,8 +14,8 @@
    $row = mysqli_fetch_assoc($result);
 
    // Fetch User Information
-   $name = $row["name"];
-   $profile_pic = $row["profile_pic"];
+   $name = sanitizeString($row["name"]);
+   $profile_pic = sanitizeString($row["profile_pic"]);
 
    $result_insert = mysqli_query($conn, "INSERT INTO posts(content, UID, name, profile_pic, likes) VALUES ('$content', $UID, '$name', '$profile_pic', 0)");
 
@@ -24,5 +24,4 @@
    }else{
       echo "Oops! Something went wrong! Please try again!";
    }
-
 ?>

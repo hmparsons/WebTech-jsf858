@@ -1,11 +1,11 @@
 <?php
+   include('database.php');
    include('functions.php');
 	//start session
 	session_start();
 
 	//get username and password from $_POST
 	$username = sanitizeString($_POST["username"]);
-   //echo "Username: ".$username;
 	$password = sanitizeString($_POST["password"]);
    $passhash = hash('sha256', $password);
    $name = sanitizeString($_POST["name"]);
@@ -16,7 +16,6 @@
    $answer = sanitizeString($_POST["answer"]);
    $locaiton = sanitizeString($_POST["location"]);
    $picture = sanitizeString($_POST["picture"]);
-
 
 	$dbhost = "localhost";
 	$dbuser = "root";
