@@ -26,11 +26,7 @@
 		//If authenticated: say hello!
 		$_SESSION["username"] = $username;
 		header("Location: feed.php");
-		//echo "Success!! Welcome ".$username;
-
 	}else{
-		//else ask to login again..
 		echo "Invalid password! Try again!";
-
 	}
 ?>
